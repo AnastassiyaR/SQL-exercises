@@ -1,0 +1,36 @@
+DESCRIBE kandidaadid
+
+INSERT INTO kandidaadid (id, eesnimi, perenimi, matemaatika, voorkeel, emakeel)
+VALUES (50101010124, 'ANASTASSIJA', 'RYZHKO', 35, 73, 62);
+
+UPDATE kandidaadid SET matemaatika = 89 WHERE eesnimi = 'ANASTASSIJA';
+
+SELECT * FROM kandidaadid WHERE eesnimi = 'ANASTASSIJA';
+
+DELETE FROM kandidaadid WHERE eesnimi = 'ANASTASSIJA';
+
+
+--
+
+Name        Null? Type         
+----------- ----- ------------ 
+ID                CHAR(11)     
+EESNIMI           VARCHAR2(30) 
+PERENIMI          VARCHAR2(30) 
+MATEMAATIKA       NUMBER(3)    
+VOORKEEL          NUMBER(3)    
+EMAKEEL           NUMBER(3)    
+
+1 row inserted.
+
+
+1 row updated.
+
+
+ID          EESNIMI                        PERENIMI                       MATEMAATIKA   VOORKEEL    EMAKEEL
+----------- ------------------------------ ------------------------------ ----------- ---------- ----------
+50101010124 ANASTASSIJA                    RYZHKO                                   89         73         62
+
+
+1 row deleted.
+

@@ -1,0 +1,279 @@
+COLUMN diagramm FORMAT A12
+
+SELECT eesnimi,
+       perenimi,
+       CASE 
+           WHEN SUBSTR(id, 1, 1) IN ('1', '3', '5') THEN 'M'
+           ELSE 'N'
+       END AS sugu,
+       matemaatika AS matem,
+       RPAD('*', ROUND(matemaatika / 10), '*') AS diagramm,
+       CASE
+           WHEN TO_NUMBER(SUBSTR(id,4,2)) BETWEEN 1 AND 12
+            AND TO_NUMBER(SUBSTR(id,6,2)) BETWEEN 1 AND 31
+           THEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(SUBSTR(id,2,6),'RRMMDD'))/12)
+           ELSE NULL
+       END AS vanus,
+       CASE
+           WHEN TO_NUMBER(SUBSTR(id,4,2)) BETWEEN 1 AND 12
+            AND TO_NUMBER(SUBSTR(id,6,2)) BETWEEN 1 AND 31
+           THEN ADD_MONTHS(TO_DATE(SUBSTR(id,2,6),'RRMMDD'), 12*25)
+           ELSE NULL
+       END AS sünniaeg25
+FROM kandidaadid;
+
+----
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+JAANO                          PAAP                           M         97 **********                       
+HEIMAR                         KALLAK                         M         97 **********                       
+JAAN                           LEIN                           M         98 **********                       
+AIMAR                          HALLIKMA                       M         99 **********                       
+ILMAR                          BAUMAN                         M         92 *********                        
+ALAR                           EMAJåE                         M         91 *********                        
+TANEL                          AADLI                          M         85 *********                        
+MIKK                           PRIKS                          M         89 *********                        
+EERO                           METS                           M         82 ********                         
+MEELIS                         SOIKKA                         M         95 **********                       
+JANIKA                         ASSOR                          N         80 ********                         
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+ARTJOM                         KILK                           M         68 *******                          
+TAAVI                          AASAV                          M         74 *******                          
+ALEKSEI                        PIIRSALU                       M         70 *******                          
+HARRI                          ADER                           M         82 ********                         
+MARTIN                         TOMINGAS                       M         48 *****                            
+TIMO                           PIHL                           M         95 **********                       
+ANDREI                         JAKSON                         M         96 **********                       
+MART                           LELUMEES                       M         95 **********                       
+NEEME                          LEIBAK                         M         89 *********                        
+MARTIN                         EENSAAR                        M         93 *********                        
+ELMO                           EENSAAR                        M         77 ********                         
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+URMAS                          ANDRE                          M         95 **********                       
+MIHKEL                         MALSROOS                       M         76 ********                         
+VIRGO                          JŽRVEOJA                       M         90 *********                        
+SILVER                         PALLO                          M         85 *********                        
+TAUNO                          KARU                           M         83 ********                         
+KARIINA                        šMARIK                         N         81 ********                         
+MARKO                          NIRK                           M         85 *********                        
+TARMO                          LEHEMAA                        M         80 ********                         
+RAUL                           PALLAS                         M         94 *********                        
+ALVAR                          VEILBERG                       M         98 **********                       
+MIHKEL                         NEIMAR                         M         78 ********                         
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+JAANUS                         SAAR                           M         89 *********                        
+SIIM                           NåOMAA                         M         85 *********                        
+MŽRTEN                         RåIGAS                         M         91 *********                        
+ALLAN                          RššTELMAA                      M         89 *********                        
+REEMET                         PETROV                         M         84 ********                         
+JšRI                           GROSSMANN                      M         79 ********                         
+ALEKSANDR                      KOOP                           M         87 *********                        
+REINO                          LAAST                          M         77 ********                         
+LAURI                          ERVALD                         M         82 ********                         
+MAKSIM                         OTTAS                          M         89 *********                        
+ILLE                           VEILBERG                       N         93 *********                        
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+MARJU                          HILLEP                         N         78 ********                         
+NATALIA                        RAUDSEPP                       N         91 *********                        
+MADIS                          ROSEN                          M         80 ********             23 14-DEC-26
+RENNO                          LAUR                           M         76 ********                         
+ALLAN                          NURMITS                        M         76 ********                         
+URMO                           PEETS                          M         82 ********             24 18-NOV-25
+TIIT                           HIRV                           M         76 ********                         
+PRIIT                          LIGI                           M         71 *******                          
+RAUNO                          METSAOTS                       M         80 ********                         
+TANEL                          KROON                          M         72 *******                          
+MAREK                          KIRSIPUU                       M         72 *******                          
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+KIRILL                         SåMER                          M         75 ********                         
+MIHKEL                         KALDVEE                        M         57 ******                           
+SIIM                           KåIV                           M         68 *******                          
+KAAREL                         KALJUR                         M         68 *******                          
+KASPAR                         SOKK                           M         84 ********             23 06-NOV-26
+TRIIN                          PEENSALU                       N         83 ********             24 08-JAN-26
+KRISTJAN                       PALUTAJA                       M         68 *******              23 23-NOV-26
+PRIIDIK                        BAMBERG                        M         83 ********                         
+PRIIT                          MŽTLIK                         M         59 ******                           
+TOOMAS                         MIHELSON                       M         74 *******                          
+DENISS                         ANDRESSON                      M         62 ******                           
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+MŽRT                           KALLASTE                       M         79 ********                         
+RAGNAR                         JAAKSOO                        M         72 *******                          
+IVO                            NILK                           M         79 ********             23 18-DEC-26
+HANNES                         JŽRVI                          M         76 ********                         
+MIKK                           SARAPU                         M         75 ********                         
+TOOM                           TIIDEMANN                      M         64 ******                           
+VERONIKA                       VŽLI                           N         93 *********                        
+AHTI                           KAIGAS                         M         71 *******                          
+MARKUS                         KUZNETSOV                      M         69 *******                          
+JAANUS                         VILLEMS                        M         83 ********                         
+MART                           VESIAID                        M         80 ********                         
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+ROLAND                         LUMBERG                        M         81 ********                         
+JAANUS                         JAASKA                         M         87 *********                        
+ANDRE                          LEINVALD                       M         75 ********                         
+LAAS                           FOMAT¾KIN                      M         83 ********                         
+ARVO                           VILLEMS                        M         73 *******                          
+ERASMUS                        BONDARVE                       M         70 *******                          
+PAMELA                         BESSONOV                       N         70 *******                          
+ALEKSEI                        JALASTO                        M         85 *********                        
+KAAREL                         TåRTO¾NåI                      M         80 ********                         
+TAAVO                          LEINO                          M         72 *******                          
+LAURI                          SELGE                          M         70 *******                          
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+MEELIS                         MEDAR                          M         67 *******                          
+RAIDO                          HåBE                           M         64 ******                           
+VERON                          MŽE                            M         76 ********             24 29-DEC-25
+ANNELY                         MESILA                         N         73 *******                          
+EGON                           LEHTER                         M         65 *******                          
+SVEN                           KOSHELEV                       M         66 *******                          
+VAIKO                          TATTER                         M         66 *******                          
+ALEKSANDR                      RUUS                           M         81 ********                         
+MARTI                          ROOTS                          M         78 ********                         
+KEIO-MARGUS                    RIKKEN                         M         67 *******                          
+JOHAN                          SEPP                           M         64 ******                           
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+KRISTO                         MARTINSON                      M         49 *****                23 12-DEC-26
+ARNE                           VALDAS                         M         44 ****                             
+ALEKSANDR                      LILLAK                         M         60 ******                           
+EIRIK                          PALLOTEDDER                    M         57 ******               23 19-NOV-26
+KAIMO                          MŽE                            M         57 ******                           
+LEHOR                          LAMP                           M         66 *******                          
+IVARI                          RANDMA                         M         65 *******                          
+SILVER                         LIIVAK                         M         54 *****                            
+ANTTI                          LŽŽNE                          M         70 *******                          
+MARVIN                         åUNAPUU                        M         56 ******                           
+ERKKI                          SåLG                           M         59 ******                           
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+PRIIT                          PIIRSALU                       M         56 ******               23 05-DEC-26
+JANEK                          TASANE                         M         71 *******                          
+CAROLYN                        ALEKSEJEV                      N         70 *******                          
+NELE                           MARNAUSSOV                     N         71 *******                          
+OLGA                           PRIKS                          N         59 ******                           
+TORMI                          MåNJAM                         M         70 *******                          
+KATI                           TAMM                           N         62 ******                           
+PEEP                           PRIKS                          M         55 ******                           
+KALEV                          SEEBA                          M         46 *****                            
+ALARI                          MOISAR                         M         69 *******                          
+SIIM                           EERME                          M         53 *****                            
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+KALLE                          VARES                          M         73 *******                          
+MART                           MAIMISTON                      M         72 *******              24 27-JAN-26
+VILJO                          LEIN                           M         75 ********                         
+REILI                          SAGAJA                         N         59 ******                           
+LAURI                          POLL                           M         53 *****                            
+MART                           NIMMERFELDT                    M         47 *****                23 12-NOV-26
+MIHKEL                         HINTSOV                        M         59 ******                           
+KRISTO                         VOOGLA                         M         58 ******                           
+ERKKI                          KOOKLA                         M         57 ******               24 07-DEC-25
+KRISTJAN                       KAMBEK                         M         68 *******                          
+VEIKO                          EDING                          M         42 ****                             
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+PRIIT                          RAMMUL                         M         37 ****                             
+AHTO                           EMAJåE                         M         67 *******                          
+RAIT                           DAUB                           M         59 ******               24 15-DEC-25
+MARTIN                         AUN                            M         63 ******                           
+MIHKEL                         AAVIK                          M         56 ******                           
+TIIT                           RANDNA                         M         51 *****                            
+MAREK                          KORB                           M         53 *****                            
+ROMAN                          JAAKSON                        M         68 *******                          
+GERT                           KåIV                           M         53 *****                            
+SANDER                         MŽNNASSON                      M         73 *******                          
+ALEKSANDRA                     SILLAMAA                       N         53 *****                            
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+KAUR                           PåLDMAA                        M         52 *****                            
+KADRI                          KAIS                           N         71 *******                          
+MARTIN                         ONOHHOV                        M         48 *****                            
+INDREK                         LEIST                          M         53 *****                23 22-DEC-26
+VALTER                         KIIS                           M         75 ********                         
+VELLO                          TELVAR                         M         73 *******                          
+OTT                            KILP                           M         60 ******               23 14-DEC-26
+ANDRES                         TAUR                           M         63 ******                           
+KERT                           ERDMANN                        M         53 *****                            
+MAREK                          PIKKAR                         M         55 ******                           
+RAVEL                          EVERT                          M         62 ******                           
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+RENNAT                         VEERBAUM                       M         49 *****                            
+MARITE                         JEGONJAN                       N         56 ******                           
+LEONID                         OTSALAINEN                     M         49 *****                            
+JOOSEP                         VEERSALU                       M         45 *****                            
+TAURI                          JšRGENSON                      M         57 ******               23 14-DEC-26
+KERDO                          PŽRNASTE                       M         51 *****                            
+MARTIN                         VASSUS                         M         50 *****                            
+IGOR                           LABE                           M         42 ****                             
+ILJA                           PIKK                           M         52 *****                            
+PRIIT                          SAAR                           M         33 ***                              
+SIIM                           LAURIMAA                       M         49 *****                            
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+HENDRIK                        VALLER                         M         51 *****                            
+ERIK                           ERVIN                          M         45 *****                            
+KASPAR                         PIKANI                         M         43 ****                             
+KRISTJAN                       MULD                           M         56 ******                           
+TARVO                          TELLING                        M         44 ****                             
+MATTIAS                        PILV                           M         39 ****                             
+RANNER                         LIGI                           M         28 ***                              
+TARMO                          VILT                           M         44 ****                 23 05-DEC-26
+SIIM                           MOORAST                        M         52 *****                            
+MAIT                           LEIGER                         M         53 *****                            
+REIMO                          KLASEN                         M         49 *****                            
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+MARIO                          REBANE                         M         27 ***                              
+PRIIT                          åIGLANE                        M         47 *****                            
+SVEN                           MUTLI                          M         42 ****                             
+MARTIN                         ENNUS                          M         44 ****                             
+MART                           JåGEVA                         M         35 ****                             
+KUUNO                          HEIN                           M         32 ***                              
+REIGO                          VASSUS                         M         34 ***                  23 26-DEC-26
+KRISTJAN                       MAAPALU                        M         41 ****                             
+GERD                           SIIMON                         M         48 *****                            
+TANEL                          VIHMANN                        M         45 *****                            
+MAURI                          TOMP                           M         42 ****                 23 15-NOV-26
+
+EESNIMI                        PERENIMI                       S      MATEM DIAGRAMM          VANUS SÜNNIAEG2
+------------------------------ ------------------------------ - ---------- ------------ ---------- ---------
+DENIS                          SEPP                           M         31 ***                              
+KRISTJAN                       BREMANN                        M         38 ****                 24 18-DEC-25
+OLEG                           ISRAEL                         M         39 ****                             
+OLIVER                         DANILAS                        M         42 ****                             
+VELLO                          KOHARI                         M         21 **                   23 26-OCT-26
+KAIRE                          PILDER                         N         39 ****                             
+MAIK                           TEDER                          M         35 ****                             
+INDREK                         ZAHKNA                         M         27 ***                  23 23-NOV-26
+EVELIN                         ELJANDI                        N         31 ***                              
+MAREK                          TREI                           M         28 ***                              
+
+197 rows selected. 
+

@@ -1,0 +1,84 @@
+SELECT 
+    y.eesnimi AS "EESNIMI",
+    y.perenimi AS "PERENIMI",
+    TO_CHAR(k.kuupaev, 'DD.MM.YYYY') AS "KUUPÄEV",
+    k.too_nr AS "TÖÖ NR.",
+    k.punktid AS "PUNKTE",
+    k.failinimi AS "FAIL"
+FROM 
+    lepikult.koduylesanded k
+JOIN 
+    lepikult.yliopilased y ON k.yliopilane = y.id
+JOIN 
+    lepikult.oppeained o ON k.oppeaine = o.kood
+WHERE
+    o.kood = 'ICA0016'
+ORDER BY 
+    k.too_nr;
+
+
+SELECT 
+    y.id AS "ID",
+    y.eesnimi AS "EESNIMI",
+    y.perenimi AS "PERENIMI"
+FROM 
+    lepikult.yliopilased y
+LEFT JOIN 
+    lepikult.koduylesanded k 
+    ON k.yliopilane = y.id AND k.oppeaine = 'ICA0077'
+WHERE 
+    k.id IS NULL
+
+
+SELECT
+    vv.nimi AS "VANAVANEM",
+    v.nimi AS "LAPS",
+    l.nimi AS "LAPSELAPS"
+FROM 
+    lepikult.sugupuu vv
+LEFT JOIN 
+    lepikult.sugupuu v ON v.emakood = vv.kood OR v.isakood = vv.kood
+LEFT JOIN 
+    lepikult.sugupuu l ON l.emakood = v.kood OR l.isakood = v.kood
+WHERE 
+    vv.nimi = 'Pauliine'
+
+
+-------------
+
+
+EESNIMI         PERENIMI        KUUPÄEV       TÖÖ NR.     PUNKTE FAIL                
+--------------- --------------- ---------- ---------- ---------- --------------------
+Virgo           Pihlakas        01.09.2025          1          6 fail17.txt          
+Tarmo           Kuusk           06.09.2025          1         10 fail10.txt          
+Sirje           Sarapuu         09.09.2025          1          4 fail14.txt          
+Katrin          Kask            10.09.2025          1          5 fail1.txt           
+Katrin          Kask            11.09.2025          1          7 fail2.txt           
+Sirje           Sarapuu         11.09.2025          2          3 fail15.txt          
+Katrin          Kask            12.09.2025          2          7 fail3.txt           
+Sirje           Sarapuu         17.09.2025          2          6 fail16.txt          
+Tarmo           Kuusk           08.09.2025          2          8 fail11.txt          
+Katrin          Kask            13.09.2025          3          6 fail4.txt           
+
+10 rows selected. 
+
+
+ID          EESNIMI         PERENIMI       
+----------- --------------- ---------------
+50512200906 Tarmo           Kuusk          
+60106117102 Liina           Vaher          
+60206301174 Sirje           Sarapuu        
+
+
+VANAVANEM       LAPS            LAPSELAPS      
+--------------- --------------- ---------------
+Pauliine        Leena           Siiri          
+Pauliine        Leena           Olavi          
+Pauliine        Peeter          Gustav         
+Pauliine        Peeter          Jaana          
+Pauliine        Karl            Paul           
+Pauliine        Karl            Tarvi          
+
+6 rows selected. 
+
+
