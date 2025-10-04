@@ -1,0 +1,72 @@
+SELECT y.eesnimi, y.perenimi, ROUND(avg(k.punktid), 1) as "kesk. punkte"
+FROM lepikult.koduylesanded k
+JOIN lepikult.yliopilased y ON y.id = k.yliopilane
+GROUP BY y.eesnimi, y.perenimi
+ORDER BY "kesk. punkte" DESC;
+
+
+SELECT y.perenimi as "uliopilane", count(k.failinimi) as "toid"
+FROM lepikult.koduylesanded k
+JOIN lepikult.yliopilased y ON k.yliopilane = y.id
+GROUP BY y.perenimi
+
+
+SELECT '19' || SUBSTR(k.id,2,2) AS "AASTA",
+       ROUND(AVG(k.voorkeel), 1) AS "KESK. HINNE"
+FROM lepikult.kandidaadid k
+WHERE SUBSTR(k.id,1,1) IN ('1','3','5')
+    AND TO_NUMBER(SUBSTR(k.id,4,2)) BETWEEN 1 AND 12 
+    AND TO_NUMBER(SUBSTR(k.id,6,2)) BETWEEN 1 AND 31
+GROUP BY SUBSTR(k.id,2,2)
+ORDER BY "KESK. HINNE" ASC
+FETCH FIRST 1 ROW ONLY;
+
+
+SELECT "Uliopilane", "Oppeaine", "Kesk. Punkte"
+FROM (
+    SELECT y.eesnimi || ', ' || y.perenimi AS "Uliopilane",
+    o.nimetus AS "Oppeaine",
+    ROUND(AVG(k.punktid), 1) AS "Kesk. Punkte",
+    MAX(ROUND(AVG(k.punktid), 1)) OVER (PARTITION BY y.id) AS maxpunkte
+    FROM lepikult.yliopilased y
+    JOIN lepikult.koduylesanded k ON k.yliopilane = y.id
+    JOIN lepikult.oppeained o ON k.oppeaine = o.kood
+    GROUP BY y.id, y.eesnimi, y.perenimi, o.nimetus
+)
+WHERE "Kesk. Punkte" = maxpunkte
+ORDER BY "Kesk. Punkte" DESC;
+
+
+
+---
+
+
+
+EESNIMI         PERENIMI        kesk. punkte
+--------------- --------------- ------------
+Tarmo           Kuusk                    7.3
+Katrin          Kask                     6.9
+Virgo           Pihlakas                 6.5
+Sirje           Sarapuu                  4.3
+
+
+uliopilane            toid
+--------------- ----------
+Pihlakas                 4
+Kuusk                    3
+Sarapuu                  3
+Kask                     8
+
+
+AASTA      KESK. HINNE
+---------- -----------
+1999              69.8
+
+
+Uliopilane                       Oppeaine                                 Kesk. Punkte
+-------------------------------- ---------------------------------------- ------------
+Katrin, Kask                     Riistvaral„hedane programmeerimine                 10
+Tarmo, Kuusk                     Oracle: SQL ja PL/SQL                               9
+Virgo, Pihlakas                  Digitaalkommunikatsioon                             8
+Sirje, Sarapuu                   Oracle: SQL ja PL/SQL                             4.3
+
