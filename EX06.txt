@@ -1,0 +1,55 @@
+SET PAGESIZE 15
+SET FEEDBACK OFF
+SET VERIFY OFF
+
+COLUMN nimetus FORMAT A80 NEW_VALUE aine_nimetus
+COLUMN oppejoud FORMAT A20 OLD_VALUE oppejoud_vaartus NOPRINT
+
+ACCEPT aine_fragm CHAR PROMPT 'Sisestage õppeaine nimetus: '
+
+TTITLE LEFT 'Aine: ' aine_nimetus SKIP 2
+BTITLE LEFT 'Opppejõud: ' oppejoud_vaartus
+
+BREAK ON nimetus SKIP PAGE ON nimi SKIP PAGE
+
+
+SELECT oppeained.nimetus AS nimetus,
+       oppeained.oppejoud AS oppejoud,
+       CONCAT(yliopilased.perenimi, CONCAT(', ', yliopilased.eesnimi)) AS nimi,
+       koduylesanded.too_nr AS "Ülesanne",
+       koduylesanded.punktid AS "Punktid",
+       TO_CHAR(koduylesanded.kuupaev, 'DD.MM.YYYY') AS "Kuupäev"
+FROM lepikult.koduylesanded, lepikult.yliopilased, lepikult.oppeained
+WHERE koduylesanded.oppeaine = oppeained.kood
+  AND koduylesanded.yliopilane = yliopilased.id
+  AND UPPER(oppeained.nimetus) LIKE UPPER('%&aine_fragm%')
+ORDER BY nimetus, nimi, "Ülesanne"
+/
+
+CLEAR COLUMNS
+SET FEEDBACK ON
+TTITLE OFF
+BTITLE OFF
+
+-------
+
+
+Aine: Digitaalkommunikatsioon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+NIMETUS                                                                          NIMI                               Ülesanne    Punktid Kuupäev   
+-------------------------------------------------------------------------------- -------------------------------- ---------- ---------- ----------
+Digitaalkommunikatsioon                                                          Kask, Katrin                              1          6 02.09.2025
+                                                                                                                           2          7 03.09.2025
+KUP]ejud:  HeldurHaak                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+Aine: Digitaalkommunikatsioon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+NIMETUS                                                                          NIMI                               Ülesanne    Punktid Kuupäev   
+-------------------------------------------------------------------------------- -------------------------------- ---------- ---------- ----------
+Digitaalkommunikatsioon                                                          Kuusk, Tarmo                              1          4 07.09.2025
+KUP]ejud:  HeldurHaak                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+Aine: Digitaalkommunikatsioon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+NIMETUS                                                                          NIMI                               Ülesanne    Punktid Kuupäev   
+-------------------------------------------------------------------------------- -------------------------------- ---------- ---------- ----------
+Digitaalkommunikatsioon                                                          Pihlakas, Virgo                           1          8 02.09.2025
+
+                                                                                                                                                                                                                                                                                                                
+KUP]ejud:  HeldurHaak                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+columns cleared
