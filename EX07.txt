@@ -1,0 +1,73 @@
+GRANT SELECT ON lepikult.oppeained to anrozk
+CREATE TABLE anrozk_oppeained AS (SELECT * FROM lepikult.oppeained);
+CREATE TABLE anrozk_uued_oppeained AS (SELECT * FROM lepikult.uued_oppeained);
+
+
+INSERT INTO anrozk_oppeained(KOOD, OPPEJOUD, NIMETUS)
+VALUES ('ITI001', 'Anastassija Rozko', 'Nimetus');
+
+INSERT INTO anrozk_oppeained(KOOD, OPPEJOUD, NIMETUS)
+VALUES ('ITI002', 'Anastassija Rozko', 'Nimetusssss');
+
+SELECT * FROM anrozk_oppeained;
+
+
+MERGE INTO anrozk_oppeained a
+USING anrozk_uued_oppeained u
+ON (a.kood = u.kood)
+WHEN MATCHED THEN
+    UPDATE SET a.oppejoud = u.oppejoud, a.nimetus = u.nimetus
+WHEN NOT MATCHED THEN
+    INSERT (kood, oppejoud, nimetus)
+    VALUES (u.kood, u.oppejoud, u.nimetus);
+  
+SELECT * FROM anrozk_oppeained;
+
+
+---
+
+
+Grant succeeded.
+
+
+Table ANROZK_OPPEAINED created.
+
+
+Table ANROZK_UUED_OPPEAINED created.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+KOOD    OPPEJOUD             NIMETUS                                 
+------- -------------------- ----------------------------------------
+ICA0016 Toomas Lepikult      Oracle: SQL ja PL/SQL                   
+ICA0092 Heldur Haak          Digitaalkommunikatsioon                 
+ICA0080 Peeter Marvet        Digitaalne heli- ja pildit””tlus        
+ICA0077 Toomas Kont          Riistvaral„hedane programmeerimine      
+ITI001  Anastassija Rozko    Nimetus                                 
+ITI002  Anastassija Rozko    Nimetusssss                             
+
+6 rows selected. 
+
+
+3 rows merged.
+
+
+KOOD    OPPEJOUD             NIMETUS                                 
+------- -------------------- ----------------------------------------
+ICA0016 Toomas Lepikult      Oracle: SQL ja PL/SQL                   
+ICA0092 Sander Lodjapuu      Sissejuhatus erialasse                  
+ICA0080 Peeter Marvet        Digitaalne heli- ja pildit””tlus        
+ICA0077 Toomas Kont          Riistvaral„hedane programmeerimine      
+ITI001  Anastassija Rozko    Nimetus                                 
+ITI002  Anastassija Rozko    Nimetusssss                             
+ICM0008 Paul Leis            Tarkvaratehnika                         
+ICY0019 Lembit Viilup        Majandusäpetus                          
+
+8 rows selected. 
+
+
