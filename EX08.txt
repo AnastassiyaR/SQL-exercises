@@ -1,0 +1,234 @@
+DROP TABLE laenutused;
+DROP TABLE raamatud;
+DROP TABLE lugejad;
+DROP TABLE Oracle_tulemused;
+
+
+-- ORACLE KURSUS
+CREATE TABLE Oracle_tulemused (
+    id VARCHAR2(11),
+    eesnimi VARCHAR2(50),
+    perenimi VARCHAR2(50),
+    ul1 NUMBER(2),
+    ul2 NUMBER(2),
+    ul3 NUMBER(2),
+    kokku NUMBER(3),
+    arvestus VARCHAR2(2)
+);
+
+INSERT INTO Oracle_tulemused (id, eesnimi, perenimi, ul1, ul2, ul3, kokku, arvestus)
+SELECT 
+    y.id,
+    y.eesnimi,
+    y.perenimi,
+    NVL(MAX(CASE WHEN k.too_nr = 1 THEN k.punktid END), 0) AS ul1,
+    NVL(MAX(CASE WHEN k.too_nr = 2 THEN k.punktid END), 0) AS ul2,
+    NVL(MAX(CASE WHEN k.too_nr = 3 THEN k.punktid END), 0) AS ul3,
+    NVL(MAX(CASE WHEN k.too_nr = 1 THEN k.punktid END), 0) +
+    NVL(MAX(CASE WHEN k.too_nr = 2 THEN k.punktid END), 0) +
+    NVL(MAX(CASE WHEN k.too_nr = 3 THEN k.punktid END), 0) AS kokku,
+    CASE 
+        WHEN NVL(MAX(CASE WHEN k.too_nr = 1 THEN k.punktid END), 0) +
+            NVL(MAX(CASE WHEN k.too_nr = 2 THEN k.punktid END), 0) +
+            NVL(MAX(CASE WHEN k.too_nr = 3 THEN k.punktid END), 0) >= 14 
+        THEN 'A' 
+        ELSE 'MA' 
+    END AS arvestus
+FROM
+    lepikult.yliopilased y
+    LEFT JOIN lepikult.koduylesanded k ON y.id = k.yliopilane
+    LEFT JOIN lepikult.oppeained o ON k.oppeaine = o.kood
+WHERE 
+    o.kood = 'ICA0016'
+GROUP BY 
+    y.id, y.eesnimi, y.perenimi
+ORDER BY 
+    y.perenimi, y.eesnimi;
+
+SELECT * FROM Oracle_tulemused ORDER BY perenimi, eesnimi;
+
+
+-- RAAMATUKOGU ANDMEBAAS
+CREATE TABLE lugejad(
+    isikukood NUMBER(11), 
+    nimi VARCHAR2(30),
+    aadress VARCHAR2(100), 
+    telefon VARCHAR2(20), 
+    email VARCHAR2(30),
+    CONSTRAINT lugejad_pk PRIMARY KEY (isikukood)
+);
+
+CREATE TABLE raamatud(
+    shiffer VARCHAR2(50), 
+    autorid VARCHAR2(100),
+    pealkiri VARCHAR2(100), 
+    eksemplari_hind NUMBER(4,2), 
+    eksemplaride_arv NUMBER(3),
+    CONSTRAINT raamatud_pk PRIMARY KEY (shiffer)
+);
+
+CREATE TABLE laenutused(
+    laenutaja_isikukood NUMBER(11), 
+    raamatu_shiffer VARCHAR2(50),
+    laenutatud DATE, 
+    tagastatud DATE
+);
+
+ALTER TABLE laenutused
+ADD CONSTRAINT lugeja_fk 
+FOREIGN KEY (laenutaja_isikukood)
+REFERENCES lugejad(isikukood);
+
+ALTER TABLE laenutused
+ADD CONSTRAINT raamat_fk 
+FOREIGN KEY (raamatu_shiffer)
+REFERENCES raamatud(shiffer);
+
+
+INSERT INTO lugejad VALUES (37805123456, 'Kadi Lepik', 'Pärnu mnt 67-12', '+37254123456', 'kadi.lepik@gmail.com');
+INSERT INTO lugejad VALUES (48912234567, 'Märt Tamm', 'Narva mnt 23-5', '+37256234567', 'mart.tamm@hotmail.com');
+INSERT INTO lugejad VALUES (39103045678, 'Liisa Kask', 'Viru väljak 4', '+37258345678', 'liisa.kask@email.ee');
+INSERT INTO lugejad VALUES (50206156789, 'Toomas Mänd', 'Kalevi 18-34', '+37251456789', 'toomas.mand@mail.ee');
+
+INSERT INTO raamatud VALUES ('EST001', 'Anton Hansen Tammsaare', 'Tõde ja õigus I', 24.50, 8);
+INSERT INTO raamatud VALUES ('EST002', 'Andrus Kivirähk', 'Rehepapp ehk November', 18.90, 12);
+INSERT INTO raamatud VALUES ('EST003', 'Oskar Luts', 'Kevade', 16.00, 15);
+INSERT INTO raamatud VALUES ('ENG001', 'Agatha Christie', 'Murder on the Orient Express', 22.00, 6);
+INSERT INTO raamatud VALUES ('ENG002', 'Arthur Conan Doyle', 'Sherlock Holmes: Complete Stories', 35.50, 4);
+INSERT INTO raamatud VALUES ('SCI001', 'Isaac Asimov', 'Foundation', 28.00, 5);
+
+INSERT INTO laenutused VALUES (37805123456, 'EST001', SYSDATE-25, SYSDATE-10);
+INSERT INTO laenutused VALUES (48912234567, 'EST002', SYSDATE-22, NULL);
+INSERT INTO laenutused VALUES (48912234567, 'ENG001', SYSDATE-18, NULL);
+INSERT INTO laenutused VALUES (39103045678, 'EST003', SYSDATE-16, NULL);
+INSERT INTO laenutused VALUES (50206156789, 'SCI001', SYSDATE-12, NULL);
+INSERT INTO laenutused VALUES (37805123456, 'ENG002', SYSDATE-8, SYSDATE-2);
+INSERT INTO laenutused VALUES (39103045678, 'EST001', SYSDATE-5, NULL);
+
+COMMIT;
+
+
+-- VÕLGLASTE PÄRING
+SELECT
+    l.nimi AS "Võlglane", 
+    r.pealkiri AS "Raamat", 
+    la.laenutatud AS "Laenutatud kuupäeval"
+FROM 
+    lugejad l, 
+    raamatud r, 
+    laenutused la
+WHERE 
+    l.isikukood = la.laenutaja_isikukood 
+    AND r.shiffer = la.raamatu_shiffer
+    AND la.laenutatud < SYSDATE-14 
+    AND la.tagastatud IS NULL
+ORDER BY 
+    la.laenutatud;
+
+
+
+--------------------------------------------
+
+
+
+Table LAENUTUSED dropped.
+
+
+Table RAAMATUD dropped.
+
+
+Table LUGEJAD dropped.
+
+
+Table ORACLE_TULEMUSED dropped.
+
+
+Table ORACLE_TULEMUSED created.
+
+
+4 rows inserted.
+
+
+ID          EESNIMI                                            PERENIMI                                                  UL1        UL2        UL3      KOKKU AR
+----------- -------------------------------------------------- -------------------------------------------------- ---------- ---------- ---------- ---------- --
+60410020314 Katrin                                             Kask                                                        7          7          6         20 A 
+50512200906 Tarmo                                              Kuusk                                                      10          8          0         18 A 
+50509308102 Virgo                                              Pihlakas                                                    6          0          0          6 MA
+60206301174 Sirje                                              Sarapuu                                                     4          6          0         10 MA
+
+
+Table LUGEJAD created.
+
+
+Table RAAMATUD created.
+
+
+Table LAENUTUSED created.
+
+
+Table LAENUTUSED altered.
+
+
+Table LAENUTUSED altered.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+Commit complete.
+
+
+Võlglane                       Raamat                                                                                               Laenutatu
+------------------------------ ---------------------------------------------------------------------------------------------------- ---------
+Märt Tamm                      Rehepapp ehk November                                                                                03-OCT-25
+Märt Tamm                      Murder on the Orient Express                                                                         07-OCT-25
+Liisa Kask                     Kevade                                                                                               09-OCT-25
+
