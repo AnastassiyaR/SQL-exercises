@@ -1,0 +1,205 @@
+-- ===========================================
+-- ÜLESANNE 1: Tallad tabeli ja jadade loomine
+-- ===========================================
+CREATE TABLE tallad (
+    id_number NUMBER(10) PRIMARY KEY,
+    sugu VARCHAR(10) CHECK (sugu IN ('jäär', 'utt')),
+    sunniaeg DATE,
+    sunnikaal NUMBER(5,2)
+);
+
+CREATE SEQUENCE tallad_jaar_seq
+    START WITH 1
+    INCREMENT BY 2
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE tallad_utt_seq
+    START WITH 2
+    INCREMENT BY 2
+    NOCACHE
+    NOCYCLE;
+
+SET DEFINE ON
+ACCEPT sugu CHAR PROMPT 'Sisesta sugu (j=jäär, u=utt): '
+ACCEPT sunniaeg CHAR PROMPT 'Sisesta sünniaeg (DD.MM.YYYY): '
+ACCEPT sunnikaal NUMBER PROMPT 'Sisesta sünnikaal (kg): '
+
+DECLARE
+    sugu_tekst VARCHAR(10);
+BEGIN
+    IF UPPER('&sugu') = 'J' THEN
+        sugu_tekst := 'jäär';
+        INSERT INTO tallad VALUES (
+            tallad_jaar_seq.nextval, 
+            sugu_tekst, 
+            TO_DATE('&sunniaeg', 'DD.MM.YYYY'), 
+            '&sunnikaal'
+        );
+    ELSIF UPPER('&sugu') = 'U' THEN
+        sugu_tekst := 'utt';
+        INSERT INTO tallad VALUES (
+            tallad_utt_seq.nextval, 
+            sugu_tekst, 
+            TO_DATE('&sunniaeg', 'DD.MM.YYYY'), 
+            '&sunnikaal'
+        );
+    END IF;
+END;
+/
+
+SELECT * FROM tallad;
+
+-- =========================================
+-- ÜLESANNE 2: Vaate loomine kodutööde kohta
+-- =========================================
+CREATE VIEW oraclekodutood AS
+SELECT 
+    y.eesnimi || ', ' || y.perenimi AS NIMI,
+    SUM(k.punktid) AS PUNKTID
+FROM 
+    lepikult.yliopilased y
+    JOIN lepikult.koduylesanded k ON y.id = k.yliopilane
+    JOIN lepikult.oppeained o ON k.oppeaine = o.kood
+WHERE 
+    o.nimetus LIKE 'Oracle%'
+GROUP BY 
+    y.eesnimi, y.perenimi;
+
+SELECT * FROM oraclekodutood;
+
+-- ============================================
+-- ÜLESANNE 3: Õiguste andmine scott kasutajale
+-- ============================================
+GRANT SELECT ON oraclekodutood TO scott;
+SELECT * FROM anrozk.oraclekodutood;
+
+-- ===========================
+-- ÜLESANNE 4: TOP 3 tulemused
+-- ===========================
+SELECT * FROM (
+    SELECT * FROM oraclekodutood
+    ORDER BY PUNKTID DESC
+)
+WHERE ROWNUM <= 3;
+
+-- ============================================
+-- PUHASTAMINE (vajadusel)
+-- ============================================
+REVOKE SELECT ON oraclekodutood FROM scott;
+DROP VIEW oraclekodutood;
+
+DROP TABLE tallad;
+DROP SEQUENCE tallad_jaar_seq;
+DROP SEQUENCE tallad_utt_seq;
+
+
+
+-------------------------------------------------------------
+
+
+
+Table TALLAD created.
+
+
+Sequence TALLAD_JAAR_SEQ created.
+
+
+Sequence TALLAD_UTT_SEQ created.
+
+old:DECLARE
+    sugu_tekst VARCHAR(10);
+BEGIN
+    IF UPPER('&sugu') = 'J' THEN
+        sugu_tekst := 'jäär';
+        INSERT INTO tallad VALUES (
+            tallad_jaar_seq.nextval, 
+            sugu_tekst, 
+            TO_DATE('&sunniaeg', 'DD.MM.YYYY'), 
+            '&sunnikaal'
+        );
+    ELSIF UPPER('&sugu') = 'U' THEN
+        sugu_tekst := 'utt';
+        INSERT INTO tallad VALUES (
+            tallad_utt_seq.nextval, 
+            sugu_tekst, 
+            TO_DATE('&sunniaeg', 'DD.MM.YYYY'), 
+            '&sunnikaal'
+        );
+    END IF;
+END;
+
+new:DECLARE
+    sugu_tekst VARCHAR(10);
+BEGIN
+    IF UPPER('j') = 'J' THEN
+        sugu_tekst := 'jäär';
+        INSERT INTO tallad VALUES (
+            tallad_jaar_seq.nextval, 
+            sugu_tekst, 
+            TO_DATE('12.12.2000', 'DD.MM.YYYY'), 
+            '7'
+        );
+    ELSIF UPPER('j') = 'U' THEN
+        sugu_tekst := 'utt';
+        INSERT INTO tallad VALUES (
+            tallad_utt_seq.nextval, 
+            sugu_tekst, 
+            TO_DATE('12.12.2000', 'DD.MM.YYYY'), 
+            '7'
+        );
+    END IF;
+END;
+
+PL/SQL procedure successfully completed.
+
+
+ ID_NUMBER SUGU       SUNNIAEG   SUNNIKAAL
+---------- ---------- --------- ----------
+         1 jäär       12-DEC-00          7
+
+
+View ORACLEKODUTOOD created.
+
+
+NIMI                                PUNKTID
+-------------------------------- ----------
+Katrin, Kask                             25
+Tarmo, Kuusk                             18
+Sirje, Sarapuu                           13
+Virgo, Pihlakas                           6
+
+
+Grant succeeded.
+
+
+NIMI                                PUNKTID
+-------------------------------- ----------
+Katrin, Kask                             25
+Tarmo, Kuusk                             18
+Sirje, Sarapuu                           13
+Virgo, Pihlakas                           6
+
+
+NIMI                                PUNKTID
+-------------------------------- ----------
+Katrin, Kask                             25
+Tarmo, Kuusk                             18
+Sirje, Sarapuu                           13
+
+
+Revoke succeeded.
+
+
+View ORACLEKODUTOOD dropped.
+
+
+Table TALLAD dropped.
+
+
+Sequence TALLAD_JAAR_SEQ dropped.
+
+
+Sequence TALLAD_UTT_SEQ dropped.
+
+
